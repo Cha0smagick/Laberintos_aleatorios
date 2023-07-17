@@ -63,6 +63,24 @@ def generate_maze():
 # Generar el laberinto
 generate_maze()
 
+# Dibujar el laberinto y las paredes exteriores
+screen.fill(BLACK)
+
+# Dibujar las paredes exteriores
+pygame.draw.rect(screen, BLUE, (0, 0, WIDTH, CELL_SIZE))  # Pared superior
+pygame.draw.rect(screen, BLUE, (0, HEIGHT - CELL_SIZE, WIDTH, CELL_SIZE))  # Pared inferior
+pygame.draw.rect(screen, BLUE, (0, 0, CELL_SIZE, HEIGHT))  # Pared izquierda
+pygame.draw.rect(screen, BLUE, (WIDTH - CELL_SIZE, 0, CELL_SIZE, HEIGHT))  # Pared derecha
+
+# Dibujar el laberinto
+for row in range(ROWS):
+    for col in range(COLS):
+        if maze[row][col] == 0:
+            pygame.draw.rect(screen, BLUE, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+
+# Actualizar la pantalla
+pygame.display.flip()
+
 # Bucle principal del juego
 running = True
 while running:
@@ -70,13 +88,6 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    
-    # Dibujar el laberinto
-    screen.fill(BLACK)
-    for row in range(ROWS):
-        for col in range(COLS):
-            if maze[row][col] == 0:
-                pygame.draw.rect(screen, BLUE, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
     
     # Actualizar la pantalla
     pygame.display.flip()
