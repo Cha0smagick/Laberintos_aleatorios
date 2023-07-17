@@ -20,22 +20,12 @@ GREEN = (0, 255, 0)
 # Inicializar Pygame
 pygame.init()
 
-# Crear la ventana del laberinto
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Laberinto")
-
-# Reloj para controlar la velocidad de actualización de la pantalla
-clock = pygame.time.Clock()
-
-# Matriz para representar el laberinto
-maze = [[1] * COLS for _ in range(ROWS)]  # Inicializar todas las celdas como pasadizos blancos
-
-# Coordenadas de la celda de salida y llegada
-start_cell = (0, 0)
-end_cell = (ROWS - 1, COLS - 1)
-
-# Función para generar el laberinto utilizando el algoritmo de Prim
+# Función para generar un laberinto
 def generate_maze():
+    maze = [[1] * COLS for _ in range(ROWS)]  # Inicializar todas las celdas como pasadizos blancos
+    start_cell = (0, 0)
+    end_cell = (ROWS - 1, COLS - 1)
+
     # Lista para almacenar las celdas visitadas
     visited = [start_cell]
 
@@ -66,58 +56,66 @@ def generate_maze():
         else:
             visited.pop()
 
-# Generar el laberinto
-generate_maze()
+    return maze
 
-# Obtener las coordenadas de la celda adyacente a la celda marcada con una equis roja
-adjacent_cell = (end_cell[0] - 1, end_cell[1])  # Celda encima de la celda de llegada
+# Obtener la cantidad de laberintos que el usuario desea generar
+num_laberintos = int(input("Ingrese la cantidad de laberintos que desea generar: "))
 
-# Cambiar el valor de la celda adyacente a verde
-maze[adjacent_cell[0]][adjacent_cell[1]] = 2
+# Generar los laberintos y guardar las imágenes
+for i in range(num_laberintos):
+    # Generar el laberinto
+    maze = generate_maze()
 
-# Dibujar el laberinto y las paredes exteriores
-screen.fill(BLACK)
+    # Crear la ventana del laberinto
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("Laberinto")
 
-# Dibujar las paredes exteriores
-pygame.draw.rect(screen, BLACK, (0, 0, WIDTH, CELL_SIZE))  # Pared superior
-pygame.draw.rect(screen, BLACK, (0, HEIGHT - CELL_SIZE, WIDTH, CELL_SIZE))  # Pared inferior
-pygame.draw.rect(screen, BLACK, (0, 0, CELL_SIZE, HEIGHT))  # Pared izquierda
-pygame.draw.rect(screen, BLACK, (WIDTH - CELL_SIZE, 0, CELL_SIZE, HEIGHT))  # Pared derecha
+    # Reloj para controlar la velocidad de actualización de la pantalla
+    clock = pygame.time.Clock()
 
-# Dibujar el laberinto
-for row in range(ROWS):
-    for col in range(COLS):
-        if maze[row][col] == 1:
-            pygame.draw.rect(screen, BLACK, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-        elif (row, col) == start_cell:
-            pygame.draw.rect(screen, BLUE, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-        elif (row, col) == end_cell or (row, col) == adjacent_cell:
-            pygame.draw.rect(screen, GREEN, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-        else:
-            pygame.draw.rect(screen, WHITE, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+    # Dibujar el laberinto y las paredes exteriores
+    screen.fill(BLACK)
 
-            # Dibujar la marca 'X' en el cuadrado verde
-            if maze[row][col] == 2:
-                pygame.draw.line(screen, BLACK, (col * CELL_SIZE, row * CELL_SIZE), ((col + 1) * CELL_SIZE, (row + 1) * CELL_SIZE))
-                pygame.draw.line(screen, BLACK, ((col + 1) * CELL_SIZE, row * CELL_SIZE), (col * CELL_SIZE, (row + 1) * CELL_SIZE))
+    # Dibujar las paredes exteriores
+    pygame.draw.rect(screen, BLACK, (0, 0, WIDTH, CELL_SIZE))  # Pared superior
+    pygame.draw.rect(screen, BLACK, (0, HEIGHT - CELL_SIZE, WIDTH, CELL_SIZE))  # Pared inferior
+    pygame.draw.rect(screen, BLACK, (0, 0, CELL_SIZE, HEIGHT))  # Pared izquierda
+    pygame.draw.rect(screen, BLACK, (WIDTH - CELL_SIZE, 0, CELL_SIZE, HEIGHT))  # Pared derecha
 
-# Guardar la imagen del laberinto como archivo .jpg
-pygame.image.save(screen, "laberinto.jpg")
+    # Dibujar el laberinto
+    for row in range(ROWS):
+        for col in range(COLS):
+            if maze[row][col] == 1:
+                pygame.draw.rect(screen, BLACK, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+            elif (row, col) == (0, 0):
+                pygame.draw.rect(screen, BLUE, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+            elif (row, col) == (ROWS - 1, COLS - 1):
+                pygame.draw.rect(screen, GREEN, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+            else:
+                pygame.draw.rect(screen, WHITE, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
 
-# Actualizar la pantalla
-pygame.display.flip()
+                # Dibujar la marca 'X' en el cuadro verde
+                if maze[row][col] == 0:
+                    pygame.draw.line(screen, BLACK, (col * CELL_SIZE, row * CELL_SIZE), ((col + 1) * CELL_SIZE, (row + 1) * CELL_SIZE))
+                    pygame.draw.line(screen, BLACK, ((col + 1) * CELL_SIZE, row * CELL_SIZE), (col * CELL_SIZE, (row + 1) * CELL_SIZE))
 
-# Bucle principal del juego
-running = True
-while running:
-    # Manejo de eventos
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+    # Guardar la imagen del laberinto como archivo .jpg
+    pygame.image.save(screen, f"laberinto{i + 1}.jpg")
 
     # Actualizar la pantalla
     pygame.display.flip()
-    clock.tick(60)
+
+    # Bucle principal del juego
+    running = True
+    while running:
+        # Manejo de eventos
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+        # Actualizar la pantalla
+        pygame.display.flip()
+        clock.tick(60)
 
 # Finalizar Pygame
 pygame.quit()
