@@ -15,6 +15,7 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
 RED = (255, 0, 0)
+GREEN = (0, 255, 0)
 
 # Inicializar Pygame
 pygame.init()
@@ -68,6 +69,12 @@ def generate_maze():
 # Generar el laberinto
 generate_maze()
 
+# Obtener las coordenadas de la celda adyacente a la celda marcada con una equis roja
+adjacent_cell = (end_cell[0] - 1, end_cell[1])  # Celda encima de la celda de llegada
+
+# Cambiar el valor de la celda adyacente a verde
+maze[adjacent_cell[0]][adjacent_cell[1]] = 2
+
 # Dibujar el laberinto y las paredes exteriores
 screen.fill(BLACK)
 
@@ -86,6 +93,8 @@ for row in range(ROWS):
             pygame.draw.rect(screen, BLUE, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
         elif (row, col) == end_cell:
             pygame.draw.rect(screen, RED, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+        elif (row, col) == adjacent_cell:
+            pygame.draw.rect(screen, GREEN, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
         else:
             pygame.draw.rect(screen, WHITE, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
 
