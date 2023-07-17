@@ -91,17 +91,18 @@ for row in range(ROWS):
             pygame.draw.rect(screen, BLACK, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
         elif (row, col) == start_cell:
             pygame.draw.rect(screen, BLUE, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-        elif (row, col) == end_cell:
-            pygame.draw.rect(screen, RED, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-        elif (row, col) == adjacent_cell:
+        elif (row, col) == end_cell or (row, col) == adjacent_cell:
             pygame.draw.rect(screen, GREEN, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
         else:
             pygame.draw.rect(screen, WHITE, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
 
-            # Dibujar la marca 'X' en la última celda en blanco generada
-            if (row, col) == (ROWS - 2, COLS - 2):
-                pygame.draw.line(screen, RED, (col * CELL_SIZE, row * CELL_SIZE), ((col + 1) * CELL_SIZE, (row + 1) * CELL_SIZE))
-                pygame.draw.line(screen, RED, ((col + 1) * CELL_SIZE, row * CELL_SIZE), (col * CELL_SIZE, (row + 1) * CELL_SIZE))
+            # Dibujar la marca 'X' en el cuadrado verde
+            if maze[row][col] == 2:
+                pygame.draw.line(screen, BLACK, (col * CELL_SIZE, row * CELL_SIZE), ((col + 1) * CELL_SIZE, (row + 1) * CELL_SIZE))
+                pygame.draw.line(screen, BLACK, ((col + 1) * CELL_SIZE, row * CELL_SIZE), (col * CELL_SIZE, (row + 1) * CELL_SIZE))
+
+# Guardar la imagen del laberinto como archivo .jpg
+pygame.image.save(screen, "laberinto.jpg")
 
 # Actualizar la pantalla
 pygame.display.flip()
