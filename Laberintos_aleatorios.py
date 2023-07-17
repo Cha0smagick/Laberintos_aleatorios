@@ -99,6 +99,10 @@ for i in range(num_laberintos):
                     pygame.draw.line(screen, BLACK, (col * CELL_SIZE, row * CELL_SIZE), ((col + 1) * CELL_SIZE, (row + 1) * CELL_SIZE))
                     pygame.draw.line(screen, BLACK, ((col + 1) * CELL_SIZE, row * CELL_SIZE), (col * CELL_SIZE, (row + 1) * CELL_SIZE))
 
+    # Rellenar la última celda negra generada de color verde
+    last_cell = (ROWS - 1, COLS - 2)
+    pygame.draw.rect(screen, GREEN, (last_cell[1] * CELL_SIZE, last_cell[0] * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+
     # Guardar la imagen del laberinto como archivo .jpg
     pygame.image.save(screen, f"laberinto{i + 1}.jpg")
 
