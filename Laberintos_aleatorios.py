@@ -14,6 +14,7 @@ ROWS = HEIGHT // CELL_SIZE
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
+RED = (255, 0, 0)
 
 # Inicializar Pygame
 pygame.init()
@@ -28,15 +29,19 @@ clock = pygame.time.Clock()
 # Matriz para representar el laberinto
 maze = [[1] * COLS for _ in range(ROWS)]  # Inicializar todas las celdas como pasadizos blancos
 
+# Coordenadas de la celda de salida y llegada
+start_cell = (0, 0)
+end_cell = (ROWS - 1, COLS - 1)
+
 # Función para generar el laberinto utilizando el algoritmo de Prim
 def generate_maze():
     # Lista para almacenar las celdas visitadas
-    visited = [(0, 0)]
-    
+    visited = [start_cell]
+
     while visited:
         current = visited[-1]
         maze[current[0]][current[1]] = 0  # Cambiar el valor de la celda a 0 (pasadizo blanco)
-        
+
         # Encontrar vecinos no visitados
         neighbors = []
         if current[0] > 1 and maze[current[0] - 2][current[1]] == 1:
@@ -47,15 +52,15 @@ def generate_maze():
             neighbors.append((current[0], current[1] - 2))
         if current[1] < COLS - 2 and maze[current[0]][current[1] + 2] == 1:
             neighbors.append((current[0], current[1] + 2))
-        
+
         if neighbors:
             # Elegir un vecino aleatorio
             next_cell = random.choice(neighbors)
             maze[next_cell[0]][next_cell[1]] = 0  # Cambiar el valor de la celda vecina a 0 (pasadizo blanco)
-            
+
             # Eliminar la pared entre la celda actual y la celda vecina
             maze[current[0] + (next_cell[0] - current[0]) // 2][current[1] + (next_cell[1] - current[1]) // 2] = 0
-            
+
             visited.append(next_cell)
         else:
             visited.pop()
@@ -77,6 +82,10 @@ for row in range(ROWS):
     for col in range(COLS):
         if maze[row][col] == 1:
             pygame.draw.rect(screen, BLACK, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+        elif (row, col) == start_cell:
+            pygame.draw.rect(screen, BLUE, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+        elif (row, col) == end_cell:
+            pygame.draw.rect(screen, RED, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
         else:
             pygame.draw.rect(screen, WHITE, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
 
@@ -90,10 +99,11 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    
+
     # Actualizar la pantalla
     pygame.display.flip()
     clock.tick(60)
 
 # Finalizar Pygame
 pygame.quit()
+
