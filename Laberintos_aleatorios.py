@@ -89,6 +89,11 @@ for row in range(ROWS):
         else:
             pygame.draw.rect(screen, WHITE, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
 
+            # Dibujar la marca 'X' en la última celda en blanco generada
+            if (row, col) == (ROWS - 2, COLS - 2):
+                pygame.draw.line(screen, RED, (col * CELL_SIZE, row * CELL_SIZE), ((col + 1) * CELL_SIZE, (row + 1) * CELL_SIZE))
+                pygame.draw.line(screen, RED, ((col + 1) * CELL_SIZE, row * CELL_SIZE), (col * CELL_SIZE, (row + 1) * CELL_SIZE))
+
 # Actualizar la pantalla
 pygame.display.flip()
 
@@ -106,4 +111,3 @@ while running:
 
 # Finalizar Pygame
 pygame.quit()
-
